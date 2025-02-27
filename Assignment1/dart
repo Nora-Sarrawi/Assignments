@@ -1,0 +1,73 @@
+class Library {
+  final Map<String, Map<String, dynamic>> books = {};
+
+  // Function to add a book
+  void addBook({
+    required String title,
+    String author = 'Unknown',
+    int year = 0,
+    String genre = 'General',
+  }) {
+    books[title] = {'author': author, 'year': year, 'genre': genre};
+    print('Book added successfully.');
+  }
+
+  // Function to retrieve book information
+  String getBookInfo({required String title}) {
+    if (books.containsKey(title)) {
+      final book = books[title]!;
+      return 'Author: ${book['author']}, Year: ${book['year']}, Genre: ${book['genre']}';
+    }
+    return 'Book not found.';
+  }
+
+  // Function to list all books (optionally filtered by genre)
+  void listAllBooks({String? genre}) {
+    if (books.isEmpty) {
+      print('No books in the library.');
+      return;
+    }
+
+    books.forEach((title, book) {
+      if (genre == null || book['genre'] == genre) {
+        print('Title: $title, Author: ${book['author']}, Year: ${book['year']}, Genre: ${book['genre']}');
+      }
+    });
+  }
+
+  // Function to list books by genre
+  String listBooksByGenre({required String genre}) {
+    final filteredBooks = books.entries.where((book) => book.value['genre'] == genre).map((book) => book.key).toList();
+    return filteredBooks.isNotEmpty ? filteredBooks.join(', ') : 'No books found for this genre.';
+  }
+
+  // Function to remove a book
+  String removeBook({required String title}) {
+    if (books.remove(title) != null) {
+      return 'Book removed successfully.';
+    }
+    return 'Book not found.';
+  }
+}
+
+void main() {
+  var library = Library();
+  
+  library.addBook(title: 'Dart Basics', author: 'John Doe', year: 2023, genre: 'Programming');
+  library.addBook(title: 'Flutter Guide', author: 'Jane Smith', year: 2022, genre: 'Programming');
+  library.addBook(title: 'Mystery Tales', author: 'Alice Brown', year: 2018, genre: 'Fiction');
+  
+  print(library.getBookInfo(title: 'Dart Basics'));
+  
+  print('\nAll books:');
+  library.listAllBooks();
+  
+  print('\nBooks in Programming genre:');
+  print(library.listBooksByGenre(genre: 'Programming'));
+  
+  print('\nRemoving book:');
+  print(library.removeBook(title: 'Flutter Guide'));
+  
+  print('\nAll books after removal:');
+  library.listAllBooks();
+}
